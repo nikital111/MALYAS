@@ -26,7 +26,7 @@ describe("Airdrop", function () {
         expect(MLS.address).to.be.properAddress;
         expect(TT.address).to.be.properAddress;
         expect(Airdrop.address).to.be.properAddress;
-        console.log("address is valid");
+        //console.log("address is valid");
     });
 
 

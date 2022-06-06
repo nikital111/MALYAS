@@ -335,8 +335,8 @@
       ]
     },
     "C:\\Users\\two\\Desktop\\MALYAS\\contracts\\helpContracts\\Staking.sol": {
-      "lastModificationDate": 1654456807002,
-      "contentHash": "831e13c317970d93938e8092ab84c8d2",
+      "lastModificationDate": 1654529097251,
+      "contentHash": "c2260adca6ba3db9054dd87960134497",
       "sourceName": "contracts/helpContracts/Staking.sol",
       "solcConfig": {
         "version": "0.8.4",

@@ -50,7 +50,10 @@ contract Staking is Ownable {
 
     function doBid(uint256 _amount) public {
         require(_amount > 0, "incorrect amount");
-        require(bids[msg.sender].amount == 0, "bid exist");
+        require(
+            bids[msg.sender].amount == 0 && bids[msg.sender].reward == 0,
+            "bid exist"
+        );
         require(status, "staking is closed");
 
         _token.transferFrom(msg.sender, address(this), _amount);
@@ -76,6 +79,8 @@ contract Staking is Ownable {
         );
         require(bids[msg.sender].amount > 0, "bid does not exist");
 
+        uint256 _amount = bids[msg.sender].amount;
+
         _token.transfer(msg.sender, bids[msg.sender].amount);
 
         if (bids[msg.sender].reward == 0) {
@@ -84,17 +89,20 @@ contract Staking is Ownable {
             bids[msg.sender].amount = 0;
         }
 
-        emit RemoveBid(msg.sender, bids[msg.sender].amount, block.timestamp);
+        emit RemoveBid(msg.sender, _amount, block.timestamp);
     }
 
     function claimReward() external {
         uint256 _amount = getAvailableTokens(msg.sender);
-        require(bids[msg.sender].reward > 0, "incorrect amount");
+        require(bids[msg.sender].reward > 0, "no award");
         require(_amount > 0, "tokens are still frozen");
 
         _token.transfer(msg.sender, _amount);
 
-        if (bids[msg.sender].reward == 0 && bids[msg.sender].amount == 0) {
+        if (
+            bids[msg.sender].reward - _amount == 0 &&
+            bids[msg.sender].amount == 0
+        ) {
             delete bids[msg.sender];
         } else {
             bids[msg.sender].reward -= _amount;
@@ -108,9 +116,11 @@ contract Staking is Ownable {
     }
 
     function getReward(uint256 _amount) public view returns (uint256) {
-        uint256 reward = _amount +
-            (_amount * (_rewardInYear * (_stakingPeriod / (365 days * 1000)))) /
-            100;
+        uint256 reward = ((_amount *
+            ((_rewardInYear *
+                10**18 *
+                ((_stakingPeriod * 10**18) / 31557600000)) / 10**18)) /
+            10**18) / 100;
 
         return reward;
     }
@@ -119,9 +129,9 @@ contract Staking is Ownable {
         uint256 startVesting = bids[bidder].start + _stakingPeriod;
         uint256 vestingTimes = (block.timestamp - startVesting) / _oneVesting;
         uint256 oneVestinPart = _vesting / _oneVesting;
-        uint256 onePart = bids[bidder].amount / oneVestinPart;
+        uint256 onePart = bids[bidder].reward / oneVestinPart;
         if (vestingTimes >= oneVestinPart) {
-            return bids[bidder].amount;
+            return bids[bidder].reward;
         } else {
             return onePart * vestingTimes;
         }
