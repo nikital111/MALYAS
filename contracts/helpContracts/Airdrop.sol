@@ -25,7 +25,7 @@ contract Airdrop is Ownable {
 
         for (uint256 i = 0; i < receivers.length; i++) {
             if (_holdenToken.balanceOf(receivers[i]) > 0) {
-                _givenToken.transfer(receivers[i], reward);
+                require(_givenToken.transfer(receivers[i], reward));
             }
         }
 

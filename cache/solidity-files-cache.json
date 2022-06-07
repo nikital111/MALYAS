@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "C:\\Users\\two\\Desktop\\MALYAS\\contracts\\helpContracts\\Airdrop.sol": {
-      "lastModificationDate": 1654441960061,
-      "contentHash": "3689a7b38a2443cfc2bdad0be86dbc67",
+      "lastModificationDate": 1654628663650,
+      "contentHash": "e3856294f05f110932a29c418ecda091",
       "sourceName": "contracts/helpContracts/Airdrop.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -335,8 +335,8 @@
       ]
     },
     "C:\\Users\\two\\Desktop\\MALYAS\\contracts\\helpContracts\\Staking.sol": {
-      "lastModificationDate": 1654529097251,
-      "contentHash": "c2260adca6ba3db9054dd87960134497",
+      "lastModificationDate": 1654529206629,
+      "contentHash": "c9766dee1ca6c80b73a5ab96243871a7",
       "sourceName": "contracts/helpContracts/Staking.sol",
       "solcConfig": {
         "version": "0.8.4",
