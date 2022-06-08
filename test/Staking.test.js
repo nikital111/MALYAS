@@ -72,7 +72,7 @@ describe("Staking", function () {
 
         const bid = await Staking.getInfoBid(acc2.address);
 
-        //console.log(bid)
+        // console.log(bid)
 
         expect(bid[0]).to.eq(ethers.utils.parseEther("999.9999"));
         expect(bid[1]).to.eq(time);
@@ -136,6 +136,7 @@ describe("Staking", function () {
         expect(bid[0]).to.eq(0);
         expect(bid[1]).to.eq(timeDo);
         expect(bid[2]).to.eq(timeDo + 1);
+        expect(bid[5]).to.eq(0);
 
     });
 
@@ -212,12 +213,14 @@ describe("Staking", function () {
 
         const bid = await Staking.getInfoBid(acc2.address);
 
-        //console.log(bid);
+        // console.log(bid);
 
         expect(bid[0]).to.eq(0);
         expect(bid[1]).to.eq(0);
         expect(bid[2]).to.eq(0);
         expect(bid[3]).to.eq(0);
+        expect(bid[4]).to.eq(0);
+        expect(bid[5]).to.eq(0);
 
         const balance1 = await MLS.balanceOf(acc2.address);
 

@@ -36,6 +36,8 @@ contract Staking is Ownable {
         uint256 start;
         uint256 end;
         uint256 reward;
+        uint256 rewardLeft;
+        uint256 alreadyVested;
     }
 
     mapping(address => Bid) bids;
@@ -51,7 +53,7 @@ contract Staking is Ownable {
     function doBid(uint256 _amount) public {
         require(_amount > 0, "incorrect amount");
         require(
-            bids[msg.sender].amount == 0 && bids[msg.sender].reward == 0,
+            bids[msg.sender].amount == 0 && bids[msg.sender].rewardLeft == 0,
             "bid exist"
         );
         require(status, "staking is closed");
@@ -64,7 +66,9 @@ contract Staking is Ownable {
             _amount,
             block.timestamp,
             block.timestamp + _stakingPeriod,
-            reward
+            reward,
+            reward,
+            0
         );
 
         bids[msg.sender] = curBid;
@@ -83,7 +87,7 @@ contract Staking is Ownable {
 
         _token.transfer(msg.sender, bids[msg.sender].amount);
 
-        if (bids[msg.sender].reward == 0) {
+        if (bids[msg.sender].rewardLeft == 0) {
             delete bids[msg.sender];
         } else {
             bids[msg.sender].amount = 0;
@@ -93,19 +97,22 @@ contract Staking is Ownable {
     }
 
     function claimReward() external {
-        uint256 _amount = getAvailableTokens(msg.sender);
-        require(bids[msg.sender].reward > 0, "no award");
+        uint256[2] memory info = getAvailableTokens(msg.sender);
+        uint256 _amount = info[0];
+        uint256 _vested = info[1];
+        require(bids[msg.sender].rewardLeft > 0, "no award");
         require(_amount > 0, "tokens are still frozen");
 
         _token.transfer(msg.sender, _amount);
 
         if (
-            bids[msg.sender].reward - _amount == 0 &&
+            bids[msg.sender].rewardLeft - _amount == 0 &&
             bids[msg.sender].amount == 0
         ) {
             delete bids[msg.sender];
         } else {
-            bids[msg.sender].reward -= _amount;
+            bids[msg.sender].rewardLeft -= _amount;
+            bids[msg.sender].alreadyVested += _vested;
         }
 
         emit ClaimReward(msg.sender, _amount, block.timestamp);
@@ -125,15 +132,20 @@ contract Staking is Ownable {
         return reward;
     }
 
-    function getAvailableTokens(address bidder) public view returns (uint256) {
+    function getAvailableTokens(address bidder)
+        public
+        view
+        returns (uint256[2] memory)
+    {
         uint256 startVesting = bids[bidder].start + _stakingPeriod;
-        uint256 vestingTimes = (block.timestamp - startVesting) / _oneVesting;
-        uint256 oneVestinPart = _vesting / _oneVesting;
-        uint256 onePart = bids[bidder].reward / oneVestinPart;
-        if (vestingTimes >= oneVestinPart) {
-            return bids[bidder].reward;
+        uint256 vestingTimes = ((block.timestamp - startVesting) /
+            _oneVesting) - bids[bidder].alreadyVested;
+        uint256 oneVestingPart = _vesting / _oneVesting;
+        uint256 onePart = bids[bidder].reward / oneVestingPart;
+        if (vestingTimes >= oneVestingPart) {
+            return [bids[bidder].reward, vestingTimes];
         } else {
-            return onePart * vestingTimes;
+            return [onePart * vestingTimes, vestingTimes];
         }
     }
 
