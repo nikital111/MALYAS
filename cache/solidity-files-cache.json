@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "C:\\Users\\two\\Desktop\\MALYAS\\contracts\\helpContracts\\Airdrop.sol": {
-      "lastModificationDate": 1654628663650,
-      "contentHash": "e3856294f05f110932a29c418ecda091",
+      "lastModificationDate": 1654787530215,
+      "contentHash": "84ba3a3165e328490029ab512d38be0f",
       "sourceName": "contracts/helpContracts/Airdrop.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -76,8 +76,8 @@
       ]
     },
     "C:\\Users\\two\\Desktop\\MALYAS\\contracts\\MALYAS.sol": {
-      "lastModificationDate": 1654443740070,
-      "contentHash": "9b94b5be59ecd965aec1e7d20af09cf4",
+      "lastModificationDate": 1654787384094,
+      "contentHash": "3c3476696a4f7a9935e94bc5f83e9dfa",
       "sourceName": "contracts/MALYAS.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -225,8 +225,8 @@
       ]
     },
     "C:\\Users\\two\\Desktop\\MALYAS\\contracts\\utils\\Pausable.sol": {
-      "lastModificationDate": 1654436811167,
-      "contentHash": "7d78c9bab13a2278b58d29fb5bfa9f6f",
+      "lastModificationDate": 1654787708693,
+      "contentHash": "ea14fb06e838bedb25422784972a40a8",
       "sourceName": "contracts/utils/Pausable.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -297,8 +297,8 @@
       ]
     },
     "C:\\Users\\two\\Desktop\\MALYAS\\contracts\\helpContracts\\TeamTokens.sol": {
-      "lastModificationDate": 1654453760024,
-      "contentHash": "ce926ee1ac8d320f7759bb2c4ed37908",
+      "lastModificationDate": 1654787510299,
+      "contentHash": "7c1e9f51633277e9032654111e3d95b7",
       "sourceName": "contracts/helpContracts/TeamTokens.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -335,8 +335,8 @@
       ]
     },
     "C:\\Users\\two\\Desktop\\MALYAS\\contracts\\helpContracts\\Staking.sol": {
-      "lastModificationDate": 1654688288258,
-      "contentHash": "b04210398c24b585e14dace3ee7c4810",
+      "lastModificationDate": 1654787492186,
+      "contentHash": "7687053f031372b19fdbd3e6836818e1",
       "sourceName": "contracts/helpContracts/Staking.sol",
       "solcConfig": {
         "version": "0.8.4",

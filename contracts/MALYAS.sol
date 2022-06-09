@@ -30,22 +30,35 @@ contract MALYAS is IERC20, IERC20Metadata, Ownable, Pausable {
         _mint(msg.sender, totalSupply_);
     }
 
+    /**
+     * @dev Returns the name of the token.
+     */
     function name() public view virtual override returns (string memory) {
         return _name;
     }
 
+    /**
+     * @dev Returns the symbol of the token, usually a shorter version of the name.
+     */
     function symbol() public view virtual override returns (string memory) {
         return _symbol;
     }
 
+    // Returns the number of decimals used to get its user representation.
     function decimals() public view virtual override returns (uint8) {
         return _decimals;
     }
 
+    /**
+     * @dev See {IERC20-totalSupply}.
+     */
     function totalSupply() public view virtual override returns (uint256) {
         return _totalSupply;
     }
 
+    /**
+     * @dev See {IERC20-balanceOf}.
+     */
     function balanceOf(address account)
         public
         view
@@ -56,6 +69,9 @@ contract MALYAS is IERC20, IERC20Metadata, Ownable, Pausable {
         return _balances[account];
     }
 
+    /**
+     * @dev See {IERC20-allowance}.
+     */
     function allowance(address owner, address spender)
         public
         view

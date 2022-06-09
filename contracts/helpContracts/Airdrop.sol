@@ -7,28 +7,41 @@ import "../MALYAS.sol";
 import "../otherContracts/TestToken.sol";
 
 contract Airdrop is Ownable {
+    // Раздаваемый токен
     MALYAS private _givenToken;
-    TestToken private _holdenToken;
+    // Удерживаемый токен
+    TestToken private _heldToken;
 
-    constructor(MALYAS givenToken_, TestToken holdenToken_) {
+    // Задает значения {_givenToken}, {_heldToken}.
+    constructor(MALYAS givenToken_, TestToken heldToken_) {
         _givenToken = givenToken_;
-        _holdenToken = holdenToken_;
+        _heldToken = heldToken_;
     }
 
-    event DistributedAirdrop(address indexed givenToken, uint receiversCount, uint timestamp, uint amount);
+    // Событие при раздаче
+    event DistributedAirdrop(
+        address indexed givenToken,
+        uint256 receiversCount,
+        uint256 timestamp,
+        uint256 amount
+    );
 
+    // Раздать токены холдерам
     function distributeAirdrop(address[] memory receivers) external onlyOwner {
-        // uint coefficient = balance / allHolderTokens;
-        // uint reward = _holdenToken.balanceOf(receivers[i]) * coefficient;
         uint256 balance = _givenToken.balanceOf(address(this));
         uint256 reward = balance / receivers.length;
 
         for (uint256 i = 0; i < receivers.length; i++) {
-            if (_holdenToken.balanceOf(receivers[i]) > 0) {
+            if (_heldToken.balanceOf(receivers[i]) > 0) {
                 require(_givenToken.transfer(receivers[i], reward));
             }
         }
 
-        emit DistributedAirdrop(address(_givenToken), receivers.length, block.timestamp, balance);
+        emit DistributedAirdrop(
+            address(_givenToken),
+            receivers.length,
+            block.timestamp,
+            balance
+        );
     }
 }

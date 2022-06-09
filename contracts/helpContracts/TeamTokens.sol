@@ -7,9 +7,12 @@ import "../MALYAS.sol";
 
 contract TeamTokens is Ownable {
     MALYAS private _token;
+    // Период заморозки токенов
     uint256 public _cliff;
+    // Адрес на который будут выведены токены
     address public _beneficiary;
 
+    // Задает значения {_token}, {_cliff}, {_beneficiary}.
     constructor(
         MALYAS token_,
         uint256 cliff_,
@@ -22,8 +25,14 @@ contract TeamTokens is Ownable {
         _beneficiary = beneficiary_;
     }
 
-    event WithdrawnTokens(address beneficiary, uint amount, uint timestamp);
+    // Событие при выводе токенов
+    event WithdrawnTokens(
+        address beneficiary,
+        uint256 amount,
+        uint256 timestamp
+    );
 
+    // Вывод токенов
     function withdrawTokens(uint256 _amount) external onlyOwner {
         require(block.timestamp >= _cliff, "tokens are still frozen");
         _token.transfer(_beneficiary, _amount);

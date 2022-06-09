@@ -7,16 +7,18 @@ import "../MALYAS.sol";
 
 contract Staking is Ownable {
     MALYAS private _token;
-    // lock tokens and staking
+    // Период стейкинга
     uint256 _stakingPeriod;
-    // % in year
+    // % в год
     uint256 _rewardInYear;
-    // time vesting
+    // Период всего вестинга
     uint256 _vesting;
-    // time one unlock
+    // Период одной части вестинга
     uint256 _oneVesting;
+    // Статус стейкинга
     bool status = true;
 
+    // Задает значения {_token}, {_stakingPeriod}, {_rewardInYear}, {_vesting}, {_oneVesting}.
     constructor(
         MALYAS token_,
         uint256 stakingPeriod_,
@@ -31,6 +33,16 @@ contract Staking is Ownable {
         _oneVesting = oneVesting_;
     }
 
+    /*
+    Структура ставки {
+        сумма стейкинга, 
+        начало стейкинга, 
+        конец стейкинга, 
+        общая награда, 
+        оставшаяся награда, 
+        периодов уже выплачено
+        }
+    */
     struct Bid {
         uint256 amount;
         uint256 start;
@@ -40,8 +52,10 @@ contract Staking is Ownable {
         uint256 alreadyVested;
     }
 
+    // Маппинг всех ставок по адрессам
     mapping(address => Bid) bids;
 
+    // События
     event DoBid(address indexed bidder, uint256 amount, uint256 timestamp);
     event RemoveBid(address indexed bidder, uint256 amount, uint256 timestamp);
     event ClaimReward(
@@ -50,6 +64,12 @@ contract Staking is Ownable {
         uint256 timestamp
     );
 
+    /*
+     * Застейкать определенное количество токенов
+     * Только одна ставка от одного адресса
+     * Может быть приостановлено владельцем
+     * Пользователь должен заранее сделать approve токенов контракту
+     */
     function doBid(uint256 _amount) public {
         require(_amount > 0, "incorrect amount");
         require(
@@ -76,6 +96,10 @@ contract Staking is Ownable {
         emit DoBid(msg.sender, _amount, block.timestamp);
     }
 
+    /*
+     * Забрать свои токены обратно
+     * Только по окончанию стейкинга
+     */
     function removeBid() public {
         require(
             block.timestamp >= bids[msg.sender].end,
@@ -96,6 +120,11 @@ contract Staking is Ownable {
         emit RemoveBid(msg.sender, _amount, block.timestamp);
     }
 
+    /*
+     * Получить награду
+     * Награды выдаються линейно за один период стейкинга
+     * Можно забрать награду сразу за несколько периодов или всю награду
+     */
     function claimReward() external {
         uint256[2] memory info = getAvailableTokens(msg.sender);
         uint256 _amount = info[0];
@@ -118,10 +147,12 @@ contract Staking is Ownable {
         emit ClaimReward(msg.sender, _amount, block.timestamp);
     }
 
+    // Информация по определенной ставке
     function getInfoBid(address bidder) public view returns (Bid memory) {
         return bids[bidder];
     }
 
+    // Рассчитать всю награду за стейкинг
     function getReward(uint256 _amount) public view returns (uint256) {
         uint256 reward = ((_amount *
             ((_rewardInYear *
@@ -132,6 +163,7 @@ contract Staking is Ownable {
         return reward;
     }
 
+    // Узнать текущую награду
     function getAvailableTokens(address bidder)
         public
         view
@@ -149,6 +181,10 @@ contract Staking is Ownable {
         }
     }
 
+    /*
+     * Приостановить или продолжить стейкинг
+     * Награды и токены можно забирать, если стейкинг приостановлен
+     */
     function changeStatus(bool _status) external onlyOwner {
         status = _status;
     }
