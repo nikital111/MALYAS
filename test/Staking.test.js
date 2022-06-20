@@ -53,6 +53,10 @@ describe("Staking", function () {
         const numSt = num.toString();
         const valOnContract = ethers.utils.parseEther(numSt);
 
+        const num3 = 1000 - commission;
+        const numSt3 = num3.toString();
+        const val4 = ethers.utils.parseEther(numSt3);
+
         await MLS.transfer(Staking.address, valFContract);
         await MLS.transfer(acc2.address, val);
 
@@ -60,9 +64,9 @@ describe("Staking", function () {
 
         const doBidTx = await Staking.connect(acc2).doBid(ethers.utils.parseEther("999.9999"));
         const time = (await ethers.provider.getBlock(doBidTx.blockNumber)).timestamp;
-        expect(doBidTx)
+        await expect(doBidTx)
             .to.emit(Staking, 'DoBid')
-            .withArgs(acc2.address, val, time);
+            .withArgs(acc2.address, val4, time);
 
         const balance1 = await MLS.balanceOf(acc2.address);
         const balance2 = await MLS.balanceOf(Staking.address);
@@ -104,6 +108,10 @@ describe("Staking", function () {
         const numSt2 = num2.toString();
         const val3 = ethers.utils.parseEther(numSt2);
 
+        const num3 = 1000 - commission;
+        const numSt3 = num3.toString();
+        const val4 = ethers.utils.parseEther(numSt3);
+
         await MLS.transfer(Staking.address, valFContract);
         await MLS.transfer(acc2.address, val);
 
@@ -119,9 +127,9 @@ describe("Staking", function () {
 
         const time = (await ethers.provider.getBlock(removeBidTx.blockNumber)).timestamp;
 
-        expect(removeBidTx)
+        await expect(removeBidTx)
             .to.emit(Staking, 'RemoveBid')
-            .withArgs(acc2.address, val, time);
+            .withArgs(acc2.address, val4, time);
 
         const balance1 = await MLS.balanceOf(acc2.address);
         const balance2 = await MLS.balanceOf(Staking.address);
@@ -207,7 +215,7 @@ describe("Staking", function () {
 
         const time = (await ethers.provider.getBlock(claimRewardTx.blockNumber)).timestamp;
 
-        expect(claimRewardTx)
+        await expect(claimRewardTx)
             .to.emit(Staking, 'ClaimReward')
             .withArgs(acc2.address, val2, time);
 

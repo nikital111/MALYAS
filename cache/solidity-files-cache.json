@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "C:\\Users\\two\\Desktop\\MALYAS\\contracts\\helpContracts\\Airdrop.sol": {
-      "lastModificationDate": 1654787530215,
-      "contentHash": "84ba3a3165e328490029ab512d38be0f",
+      "lastModificationDate": 1655685921683,
+      "contentHash": "ae01bba58d8cff0bb69922cf3f47ca26",
       "sourceName": "contracts/helpContracts/Airdrop.sol",
       "solcConfig": {
         "version": "0.8.4",

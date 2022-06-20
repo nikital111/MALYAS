@@ -50,9 +50,9 @@ describe("TeamTokens", function () {
 
         const time = (await ethers.provider.getBlock(withdrawTokens.blockNumber)).timestamp;
 
-        expect(withdrawTokens)
+        await expect(withdrawTokens)
             .to.emit(TeamTokens, 'WithdrawnTokens')
-            .withArgs(acc2.address, val, time);
+            .withArgs(acc2.address, valWithdraw, time);
 
         const balance1 = await MLS.balanceOf(acc2.address);
         const balance2 = await MLS.balanceOf(TeamTokens.address);

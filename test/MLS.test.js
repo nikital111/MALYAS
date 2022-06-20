@@ -29,7 +29,7 @@ describe("MLS", function () {
     let address0 = "0x0000000000000000000000000000000000000000";
     const tx = await MLS._mint(acc2.address, val);
 
-    expect(tx)
+    await expect(tx)
       .to.emit(MLS, 'Transfer')
       .withArgs(address0, acc2.address, val);
 
@@ -56,7 +56,7 @@ describe("MLS", function () {
 
     const transfer = await MLS.transfer(acc2.address, val);
 
-    expect(transfer)
+    await expect(transfer)
       .to.emit(MLS, 'Transfer')
       .withArgs(acc1.address, acc2.address, val);
 
@@ -78,7 +78,7 @@ describe("MLS", function () {
 
     const tx = await MLS.approve(acc2.address, val);
 
-    expect(tx)
+    await expect(tx)
       .to.emit(MLS, 'Approval')
       .withArgs(acc1.address, acc2.address, val);
 
@@ -102,7 +102,7 @@ describe("MLS", function () {
 
     const transferFrom = await MLS.connect(acc3).transferFrom(acc1.address, acc2.address, val);
 
-    expect(transferFrom)
+    await expect(transferFrom)
       .to.emit(MLS, 'Transfer')
       .withArgs(acc1.address, acc2.address, val);
 
@@ -129,7 +129,7 @@ describe("MLS", function () {
 
     const burn = await MLS._burn(acc1.address, val);
 
-    expect(burn)
+    await expect(burn)
       .to.emit(MLS, 'Transfer')
       .withArgs(acc1.address, address0, val);
 
@@ -149,7 +149,7 @@ describe("MLS", function () {
 
     const increase = await MLS.increaseAllowance(acc2.address, val);
 
-    expect(increase)
+    await expect(increase)
       .to.emit(MLS, 'Approval')
       .withArgs(acc1.address, acc2.address, ethers.utils.parseEther("2000"));
 
@@ -160,7 +160,7 @@ describe("MLS", function () {
 
     const decrease = await MLS.decreaseAllowance(acc2.address, val);
 
-    expect(decrease)
+    await expect(decrease)
       .to.emit(MLS, 'Approval')
       .withArgs(acc1.address, acc2.address, val);
 

@@ -12,6 +12,9 @@ contract Airdrop is Ownable {
     // Удерживаемый токен
     TestToken private _heldToken;
 
+    // Забрал ли адрес аирдроп
+    mapping(address => bool) claimed;
+
     // Задает значения {_givenToken}, {_heldToken}.
     constructor(MALYAS givenToken_, TestToken heldToken_) {
         _givenToken = givenToken_;
@@ -19,29 +22,37 @@ contract Airdrop is Ownable {
     }
 
     // Событие при раздаче
-    event DistributedAirdrop(
-        address indexed givenToken,
-        uint256 receiversCount,
-        uint256 timestamp,
-        uint256 amount
-    );
+    event DistributedAirdrop(uint256 receiversCount, uint256 timestamp);
+
+    // Событие при клейме
+    event ClaimAirdrop(address beneficiary, uint256 amount, uint256 timestamp);
 
     // Раздать токены холдерам
-    function distributeAirdrop(address[] memory receivers) external onlyOwner {
-        uint256 balance = _givenToken.balanceOf(address(this));
-        uint256 reward = balance / receivers.length;
+    function distributeAirdrop(
+        address[] calldata receivers,
+        uint256[] calldata amounts
+    ) external onlyOwner {
+        require(receivers.length == amounts.length);
 
         for (uint256 i = 0; i < receivers.length; i++) {
             if (_heldToken.balanceOf(receivers[i]) > 0) {
-                require(_givenToken.transfer(receivers[i], reward));
+                require(_givenToken.transfer(receivers[i], amounts[i]));
             }
         }
 
-        emit DistributedAirdrop(
-            address(_givenToken),
-            receivers.length,
-            block.timestamp,
-            balance
-        );
+        emit DistributedAirdrop(receivers.length, block.timestamp);
+    }
+
+    // Забрать аирдроп
+    function claimAirdrop() external {
+        require(!claimed[msg.sender], "claimed");
+        uint256 balanceUser = _heldToken.balanceOf(msg.sender);
+        require(balanceUser > 0, "no holden token");
+
+        _givenToken.transfer(msg.sender, balanceUser);
+
+        claimed[msg.sender] = true;
+
+        emit ClaimAirdrop(msg.sender, balanceUser, block.timestamp);
     }
 }
